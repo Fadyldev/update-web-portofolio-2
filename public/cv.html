@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Curriculum Vitae - Fadiyel</title>
+  <style>
+    @page { 
+      size: A4 portrait; 
+      margin: 0; 
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #0f172a;
+      color: #111827;
+      margin: 0;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    .action-bar {
+      width: 100%;
+      max-width: 210mm;
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 14px 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .action-btn {
+      background: #f59e0b;
+      color: #000;
+      font-weight: bold;
+      padding: 8px 18px;
+      border: none;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-family: monospace;
+      font-size: 12px;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+      transition: opacity 0.2s;
+    }
+    .action-btn:hover {
+      opacity: 0.9;
+    }
+    .sheet {
+      background: #ffffff;
+      width: 210mm;
+      min-height: 297mm;
+      max-width: 210mm;
+      padding: 14mm 16mm;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      border: 1px solid #e2e8f0;
+    }
+    @media print {
+      body { 
+        background: #ffffff !important; 
+        padding: 0 !important; 
+        margin: 0 !important; 
+      }
+      .sheet { 
+        box-shadow: none !important; 
+        border: none !important; 
+        padding: 12mm 16mm !important; 
+        width: 210mm !important; 
+        max-width: 210mm !important; 
+        min-height: 297mm !important;
+        margin: 0 auto !important; 
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+      }
+      .no-print { 
+        display: none !important; 
+      }
+    }
+    .header { border-bottom: 2px solid #111; padding-bottom: 18px; margin-bottom: 20px; }
+    .name { font-size: 28px; font-weight: 900; letter-spacing: -0.5px; margin: 0 0 4px 0; color: #111; text-transform: uppercase; }
+    .profession { font-size: 13px; font-weight: bold; font-family: monospace; text-transform: uppercase; color: #4b5563; margin-bottom: 6px; }
+    .headline { font-size: 12px; color: #4b5563; line-height: 1.5; margin: 0 0 10px 0; }
+    .contact-bar { display: flex; flex-wrap: wrap; gap: 14px; font-size: 11px; font-family: monospace; color: #374151; }
+    .section-title { font-size: 12px; font-family: monospace; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; color: #111; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px; margin-top: 18px; margin-bottom: 8px; }
+    .bio { font-size: 12px; line-height: 1.6; color: #374151; text-align: justify; margin: 0; }
+  </style>
+</head>
+<body>
+  <div class="action-bar no-print">
+    <div>
+      <strong style="color: #fbbf24; font-size: 13px;">Curriculum Vitae / Resume A4</strong>
+      <div style="font-size: 11px; color: #94a3b8; font-family: monospace;">Dokumen resmi Fadiyel Studio</div>
+    </div>
+    <button class="action-btn" onclick="window.print()">🖨️ Cetak / Simpan sebagai PDF (Ctrl + P)</button>
+  </div>
+
+  <div class="sheet">
+    <div class="header">
+      <div style="display: flex; justify-content: space-between; gap: 20px;">
+        <div style="flex: 1;">
+          <h1 class="name">FADIYEL</h1>
+          <div class="profession">FRONTEND DEVELOPER & VISUAL DESIGNER</div>
+          <p class="headline">Spesialis pembuatan undangan pernikahan digital interaktif, landing page editorial modern, dan aset visual berbasis web.</p>
+          <div class="contact-bar">
+            <span>✉️ fadilanugrah2232007@gmail.com</span>
+            <span>📞 +62 822-5942-8854</span>
+            <span>📍 Makassar, Sulawesi Selatan, Indonesia</span>
+            <span>🐙 github.com/fadiyel</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Professional Summary</div>
+    <p class="bio">
+      Frontend developer dan visual designer yang berfokus pada estetika editorial, kesederhanaan minimalis, dan fungsionalitas interaktif web. Berpengalaman merancang undangan pernikahan digital mewah berbasis React, Tailwind CSS, animasi halus, serta struktur layout modular yang responsif di berbagai perangkat.
+    </p>
+
+    <div class="section-title">Core Skills & Technical Arsenal</div>
+    <div style="display: flex; gap: 20px; font-size: 12px; margin-top: 10px;">
+      <div style="flex: 1;">
+        <strong style="color: #111; font-family: monospace; display: block; margin-bottom: 6px;">// Core Web</strong>
+        <ul style="margin: 0; padding-left: 16px; color: #374151; line-height: 1.6;">
+          <li>HTML & CSS Semantik</li>
+          <li>JavaScript (ES6+)</li>
+          <li>React & SPA Architecture</li>
+          <li>Tailwind CSS</li>
+        </ul>
+      </div>
+      <div style="flex: 1;">
+        <strong style="color: #111; font-family: monospace; display: block; margin-bottom: 6px;">// Design & Visual</strong>
+        <ul style="margin: 0; padding-left: 16px; color: #374151; line-height: 1.6;">
+          <li>UI/UX Design</li>
+          <li>Digital Wedding Invitation</li>
+          <li>Tipografi & Layout Editorial</li>
+          <li>Inkscape / Vector Asset</li>
+        </ul>
+      </div>
+      <div style="flex: 1;">
+        <strong style="color: #111; font-family: monospace; display: block; margin-bottom: 6px;">// Tools & Workflow</strong>
+        <ul style="margin: 0; padding-left: 16px; color: #374151; line-height: 1.6;">
+          <li>Git & GitHub</li>
+          <li>Vite & Build Tooling</li>
+          <li>Supabase Cloud Database</li>
+          <li>Cloudflare / Netlify Deployment</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-title">Selected Featured Projects</div>
+    <div style="margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #f3f4f6;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <span style="font-size: 13px; font-weight: bold; color: #111;">Elegant Romantic Wedding Invitation</span>
+        <span style="font-size: 11px; font-family: monospace; color: #6b7280;">Digital Invitation • 2025</span>
+      </div>
+      <p style="font-size: 12px; color: #374151; margin: 4px 0 6px 0; line-height: 1.5;">
+        Konsep undangan pernikahan digital bernuansa romantis dengan tipografi klasik, palet champagne-gold, countdown interaktif, dan RSVP halus.
+      </p>
+      <div style="font-size: 11px; font-family: monospace; color: #6b7280;">
+        <strong>Stack:</strong> React, Tailwind CSS, UI Design, Motion
+      </div>
+    </div>
+
+    <div style="margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #f3f4f6;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <span style="font-size: 13px; font-weight: bold; color: #111;">Botanical Minimalist Wedding Invitation</span>
+        <span style="font-size: 11px; font-family: monospace; color: #6b7280;">Digital Invitation • 2025</span>
+      </div>
+      <p style="font-size: 12px; color: #374151; margin: 4px 0 6px 0; line-height: 1.5;">
+        Undangan digital bertema floral botani dengan estetika minimalis, sage green lembut, ilustrasi dedaunan vektor, dan optimal untuk smartphone.
+      </p>
+      <div style="font-size: 11px; font-family: monospace; color: #6b7280;">
+        <strong>Stack:</strong> HTML, CSS, JavaScript, Visual Design, Inkscape
+      </div>
+    </div>
+
+    <div style="margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #f3f4f6;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <span style="font-size: 13px; font-weight: bold; color: #111;">Modern Editorial Wedding Invitation</span>
+        <span style="font-size: 11px; font-family: monospace; color: #6b7280;">Digital Invitation • 2025</span>
+      </div>
+      <p style="font-size: 12px; color: #374151; margin: 4px 0 6px 0; line-height: 1.5;">
+        Eksperimen tata letak editorial modern layaknya majalah fashion mewah, tipografi kontras tinggi monokrom, dan galeri grid dinamis.
+      </p>
+      <div style="font-size: 11px; font-family: monospace; color: #6b7280;">
+        <strong>Stack:</strong> React, UI Design, Web Development
+      </div>
+    </div>
+
+    <div style="margin-top: 20px; padding-top: 12px; border-top: 1px solid #e5e7eb; font-size: 10px; font-family: monospace; color: #9ca3af; display: flex; justify-content: space-between;">
+      <span>Verified Studio Portfolio Sheet — Fadiyel</span>
+      <span>Document Format: A4 Standard • ATS Friendly</span>
+    </div>
+  </div>
+</body>
+</html>

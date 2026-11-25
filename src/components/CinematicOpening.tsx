@@ -54,7 +54,7 @@ export function CinematicOpening({ onEnter }: { onEnter: () => void }) {
         <div className="absolute top-8 left-8 right-8 flex items-center justify-between text-xs font-mono tracking-widest text-neutral-300 uppercase">
           <div className="flex items-center gap-2">
             <Compass className="w-3.5 h-3.5 opacity-60" />
-            <span>FADIYEL // STUDIO_v1.0</span>
+            <span>FADIYEL // DEV_v1.0</span>
           </div>
           <div className="hidden sm:block text-neutral-300">
             SYS.STATUS : READY // 2025-2026
@@ -71,7 +71,7 @@ export function CinematicOpening({ onEnter }: { onEnter: () => void }) {
             className="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-full border border-white/10 bg-white/[0.03] text-xs font-mono tracking-widest text-neutral-300 uppercase"
           >
             <span className={`w-1.5 h-1.5 rounded-full ${accent.dotBg} animate-pulse`} />
-            <span>Creative Portfolio & Digital Space</span>
+            <span>Personal Portfolio & Dev Space</span>
           </motion.div>
 
           {/* Main Title "FADIYEL" */}
@@ -91,7 +91,7 @@ export function CinematicOpening({ onEnter }: { onEnter: () => void }) {
             transition={{ duration: 0.9, delay: 0.35 }}
             className="mt-4 text-base sm:text-xl font-light text-neutral-400 tracking-wider font-display uppercase"
           >
-            Building Digital Experiences
+            Full Stack Web Development
           </motion.p>
 
           {/* Progress / Enter Interaction Area */}
@@ -141,7 +141,7 @@ export function CinematicOpening({ onEnter }: { onEnter: () => void }) {
 
         {/* Footer coordinates watermark */}
         <div className="absolute bottom-8 left-8 right-8 flex items-center justify-between text-[11px] font-mono text-neutral-300">
-          <span>WEB DEV • UI DESIGN • VISUAL ART</span>
+          <span>HTML • CSS • JS • PHP • SQL</span>
           <span className="flex items-center gap-1.5">
             <Sparkles className="w-3 h-3 text-amber-400/70" />
             <span>EST. 2025</span>

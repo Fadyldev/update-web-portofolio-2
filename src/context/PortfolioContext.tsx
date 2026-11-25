@@ -16,6 +16,21 @@ const STORAGE_KEY = 'fadiyel_portfolio_data_v1';
 const OPENING_SHOWN_KEY = 'fadiyel_opening_shown_session';
 const FALLBACK_SESSION_KEY = 'fadiyel_preview_admin_session';
 
+const createUniqueId = (prefix: string) =>
+  `${prefix}-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+
+function ensureUniqueIds<T extends { id?: string }>(items: T[], prefix: string): T[] {
+  const seen = new Set<string>();
+  return items.map((item, idx) => {
+    let id = typeof item.id === 'string' && item.id.trim() ? item.id.trim() : `${prefix}-${idx + 1}`;
+    while (seen.has(id)) {
+      id = `${id}-${idx + 1}`;
+    }
+    seen.add(id);
+    return { ...item, id };
+  });
+}
+
 interface Toast {
   id: string;
   message: string;
@@ -37,6 +52,7 @@ interface PortfolioContextType {
   sendMessage: (msg: Omit<ContactMessage, 'id' | 'timestamp' | 'read'>) => Promise<{ success: boolean; error?: string }>;
   deleteMessage: (id: string) => Promise<boolean>;
   resetData: () => Promise<boolean>;
+  applyFullStackTemplate: () => Promise<boolean>;
   exportData: () => void;
   importData: (jsonString: string) => Promise<boolean>;
   currentPath: string;
@@ -67,6 +83,11 @@ interface PortfolioContextType {
   removeToast: (id: string) => void;
   hasSeenOpening: boolean;
   setHasSeenOpening: (seen: boolean) => void;
+
+  // Global CV / Resume Modal Controls
+  isResumeOpen: boolean;
+  openResumeModal: () => void;
+  closeResumeModal: () => void;
 }
 
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
@@ -79,18 +100,31 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
       if (saved) {
         const parsed = JSON.parse(saved);
         const parsedProjects = Array.isArray(parsed.projects)
-          ? parsed.projects.map((p: any) => ({
-              ...p,
-              status: p.status || 'Completed',
-              gallery: Array.isArray(p.gallery) ? p.gallery : [],
-              features: Array.isArray(p.features) ? p.features : [],
-            }))
+          ? ensureUniqueIds(
+              parsed.projects.map((p: any) => ({
+                ...p,
+                status: p.status || 'Completed',
+                techStack: Array.isArray(p.techStack)
+                  ? p.techStack
+                  : typeof p.techStack === 'string'
+                  ? p.techStack.split(',').map((s: string) => s.trim()).filter(Boolean)
+                  : ['React', 'Tailwind CSS'],
+                gallery: Array.isArray(p.gallery) ? p.gallery : [],
+                features: Array.isArray(p.features) ? p.features : [],
+              })),
+              'proj'
+            )
           : DEFAULT_PORTFOLIO_DATA.projects;
+
+        const parsedSkills = Array.isArray(parsed.skills)
+          ? ensureUniqueIds(parsed.skills, 'skill')
+          : DEFAULT_PORTFOLIO_DATA.skills;
 
         return {
           ...DEFAULT_PORTFOLIO_DATA,
           ...parsed,
           projects: parsedProjects,
+          skills: parsedSkills,
           profile: { ...DEFAULT_PORTFOLIO_DATA.profile, ...(parsed.profile || {}) },
           settings: { ...DEFAULT_PORTFOLIO_DATA.settings, ...(parsed.settings || {}) },
           about: { ...DEFAULT_ABOUT_CONTENT, ...(parsed.about || {}) },
@@ -133,6 +167,11 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     return false;
   });
 
+  // Global CV / Resume Modal State
+  const [isResumeOpen, setIsResumeOpen] = useState(false);
+  const openResumeModal = () => setIsResumeOpen(true);
+  const closeResumeModal = () => setIsResumeOpen(false);
+
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   // Calculate authenticated status
@@ -147,7 +186,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const isSaving = cloudSyncStatus === 'saving';
 
   const showToast = (message: string, type: 'success' | 'info' | 'error' = 'success') => {
-    const id = Math.random().toString(36).substring(2, 9);
+    const id = createUniqueId('toast');
     setToasts((prev) => [...prev, { id, message, type }]);
     setTimeout(() => {
       removeToast(id);
@@ -229,18 +268,31 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
       if (row && row.content) {
         const cloudContent = row.content as Partial<PortfolioData>;
         const normalizedProjects = Array.isArray(cloudContent.projects)
-          ? cloudContent.projects.map((p: any) => ({
-              ...p,
-              status: p.status || 'Completed',
-              gallery: Array.isArray(p.gallery) ? p.gallery : [],
-              features: Array.isArray(p.features) ? p.features : [],
-            }))
+          ? ensureUniqueIds(
+              cloudContent.projects.map((p: any) => ({
+                ...p,
+                status: p.status || 'Completed',
+                techStack: Array.isArray(p.techStack)
+                  ? p.techStack
+                  : typeof p.techStack === 'string'
+                  ? p.techStack.split(',').map((s: string) => s.trim()).filter(Boolean)
+                  : ['React', 'Tailwind CSS'],
+                gallery: Array.isArray(p.gallery) ? p.gallery : [],
+                features: Array.isArray(p.features) ? p.features : [],
+              })),
+              'proj'
+            )
           : DEFAULT_PORTFOLIO_DATA.projects;
+
+        const normalizedSkills = Array.isArray(cloudContent.skills)
+          ? ensureUniqueIds(cloudContent.skills, 'skill')
+          : DEFAULT_PORTFOLIO_DATA.skills;
 
         const merged: PortfolioData = {
           ...DEFAULT_PORTFOLIO_DATA,
           ...cloudContent,
           projects: normalizedProjects,
+          skills: normalizedSkills,
           profile: { ...DEFAULT_PORTFOLIO_DATA.profile, ...(cloudContent.profile || {}) },
           settings: { ...DEFAULT_PORTFOLIO_DATA.settings, ...(cloudContent.settings || {}) },
           about: { ...DEFAULT_ABOUT_CONTENT, ...(cloudContent.about || {}) },
@@ -591,7 +643,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const addProject = async (projectData: Omit<Project, 'id' | 'order'>): Promise<boolean> => {
     const newProject: Project = {
       ...projectData,
-      id: `proj-${Date.now()}`,
+      id: createUniqueId('proj'),
       order: data.projects.length + 1,
     };
     const updated = {
@@ -649,7 +701,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const addSkill = async (skillData: Omit<Skill, 'id'>): Promise<boolean> => {
     const newSkill: Skill = {
       ...skillData,
-      id: `skill-${Date.now()}`,
+      id: createUniqueId('skill'),
     };
     const updated = {
       ...data,
@@ -707,7 +759,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const sendMessage = async (
     msgData: Omit<ContactMessage, 'id' | 'timestamp' | 'read'>
   ): Promise<{ success: boolean; error?: string }> => {
-    const newMsgId = `msg-${Date.now()}`;
+    const newMsgId = createUniqueId('msg');
     const nowIso = new Date().toISOString();
 
     if (isSupabaseConfigured && supabase) {
@@ -794,6 +846,31 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
     return false;
   };
 
+  // Safe Full-Stack Template Sync: updates profession/headline/bio/tagline/statusText, skills, and about copy
+  // WITHOUT touching projects, avatarUrl, resumeUrl, contact details, settings, or messages.
+  const applyFullStackTemplate = async (): Promise<boolean> => {
+    if (!verifyAdminAccess()) return false;
+    const updatedData: PortfolioData = {
+      ...data,
+      profile: {
+        ...data.profile,
+        profession: DEFAULT_PORTFOLIO_DATA.profile.profession,
+        headline: DEFAULT_PORTFOLIO_DATA.profile.headline,
+        bio: DEFAULT_PORTFOLIO_DATA.profile.bio,
+        tagline: DEFAULT_PORTFOLIO_DATA.profile.tagline,
+        statusText: DEFAULT_PORTFOLIO_DATA.profile.statusText,
+      },
+      skills: DEFAULT_PORTFOLIO_DATA.skills,
+      about: DEFAULT_ABOUT_CONTENT,
+    };
+    const res = await savePortfolioContent(updatedData);
+    if (res.success) {
+      showToast('Teks Profil, About, & Skills Full-Stack berhasil diterapkan ke database!', 'success');
+      return true;
+    }
+    return false;
+  };
+
   // Export JSON (safe utility)
   const exportData = () => {
     try {
@@ -852,6 +929,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
         sendMessage,
         deleteMessage,
         resetData,
+        applyFullStackTemplate,
         exportData,
         importData,
         currentPath,
@@ -877,6 +955,9 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
         removeToast,
         hasSeenOpening,
         setHasSeenOpening,
+        isResumeOpen,
+        openResumeModal,
+        closeResumeModal,
       }}
     >
       {children}

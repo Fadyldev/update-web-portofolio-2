@@ -8,14 +8,15 @@ import {
   ArrowRight,
   CheckCircle2,
   GitBranch,
-  Target
+  Target,
+  FileText
 } from 'lucide-react';
 import { usePortfolio } from '../context/PortfolioContext';
 import { WORK_PROCESS_STEPS, CREATIVE_TOOLS, DEFAULT_ABOUT_CONTENT } from '../data/defaultData';
 import { getAccentClasses } from '../utils/theme';
 
 export function About() {
-  const { data, navigate } = usePortfolio();
+  const { data, navigate, openResumeModal } = usePortfolio();
   const accent = getAccentClasses(data.settings.accentColor);
   const about = {
     ...DEFAULT_ABOUT_CONTENT,
@@ -66,6 +67,14 @@ export function About() {
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/10 bg-white/[0.02] text-xs font-mono tracking-widest text-neutral-400 hover:text-white uppercase transition-all cursor-pointer"
               >
                 <span>Buka Galeri Karya</span>
+              </button>
+              <button
+                onClick={openResumeModal}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/10 bg-white/[0.02] text-xs font-mono tracking-widest text-neutral-300 hover:text-white hover:border-white/30 uppercase transition-all cursor-pointer"
+                title="Buka Lembar Curriculum Vitae / Resume"
+              >
+                <FileText className="w-3.5 h-3.5 text-amber-400" />
+                <span>Dokumen CV / Resume</span>
               </button>
             </div>
           </div>
@@ -121,7 +130,7 @@ export function About() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {data.skills.map((skill, index) => (
               <motion.div
-                key={skill.id}
+                key={`${skill.id}-${index}`}
                 initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -162,10 +171,10 @@ export function About() {
               <span>02 // Methodology</span>
             </span>
             <h2 className="text-3xl sm:text-4xl font-display font-bold text-white tracking-tight">
-              Creative Process Timeline
+              Development Process
             </h2>
             <p className="text-sm text-neutral-400 max-w-xl">
-              Alur kerja terstruktur yang diterapkan dalam mengeksekusi setiap rancangan dari ide murni hingga produk siap rilis.
+              Alur kerja terstruktur dalam memahami kebutuhan pengguna hingga membangun, menguji, dan merilis aplikasi web.
             </p>
           </div>
 
@@ -176,7 +185,7 @@ export function About() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {(about.processSteps && about.processSteps.length > 0 ? about.processSteps : WORK_PROCESS_STEPS).map((step, idx) => (
                 <motion.div
-                  key={step.number || idx}
+                  key={`step-${idx}-${step.number || ''}`}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}

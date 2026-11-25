@@ -276,9 +276,9 @@ export function ProjectDetail({ projectId }: ProjectDetailProps) {
                 <span>Teknologi</span>
               </h3>
               <div className="flex flex-wrap gap-2">
-                {project.techStack.map((tech) => (
+                {project.techStack.map((tech, tIdx) => (
                   <span
-                    key={tech}
+                    key={`${tech}-${tIdx}`}
                     className="text-xs font-mono px-3 py-1 rounded-lg border border-white/10 bg-white/[0.02] text-neutral-200"
                   >
                     {tech}

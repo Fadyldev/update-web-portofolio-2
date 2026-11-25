@@ -26,10 +26,10 @@ export function Footer() {
               </span>
             </div>
             <p className="text-sm text-neutral-400 max-w-sm leading-relaxed">
-              {data.profile.headline || 'Membangun Pengalaman Digital yang Elegan, Sinematik, dan Bernyawa.'}
+              {data.profile.headline || 'Membangun Aplikasi Web yang Fungsional, Rapi, dan Siap Digunakan.'}
             </p>
             <p className="text-xs font-mono text-neutral-300">
-              Web Developer • Designer • Digital Creator
+              {data.profile.profession || 'Junior Full Stack Web Developer'}
             </p>
           </div>
 
@@ -60,7 +60,7 @@ export function Footer() {
                   onClick={() => navigate('/about')}
                   className="hover:text-white transition-colors cursor-pointer text-left"
                 >
-                  About & Creative Process
+                  About & Workflow
                 </button>
               </li>
               <li>
@@ -129,18 +129,18 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-neutral-300">
           <div>
-            &copy; {new Date().getFullYear()} FADIYEL STUDIO. All rights reserved.
+            &copy; {new Date().getFullYear()} FADIYEL PORTFOLIO. All rights reserved.
           </div>
 
           <div className="flex items-center gap-6">
-            {/* Discrete Studio Admin terminal entry point */}
+            {/* Discrete Admin portal entry point */}
             <button
               onClick={() => navigate('/admin')}
-              title="Studio Portal (Admin)"
+              title="Admin Portal"
               className="inline-flex items-center gap-1.5 text-neutral-400 hover:text-neutral-300 transition-colors cursor-pointer"
             >
               <Lock className="w-3 h-3 opacity-60" />
-              <span className="text-[10px]">Studio Terminal</span>
+              <span className="text-[10px]">Admin Portal</span>
             </button>
 
             {/* Back to top */}

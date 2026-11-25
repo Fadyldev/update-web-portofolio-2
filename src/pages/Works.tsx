@@ -285,7 +285,7 @@ export function Works() {
 
               return (
                 <motion.div
-                  key={project.id}
+                  key={`${project.id}-${index}`}
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.35, delay: Math.min(index * 0.05, 0.4) }}
@@ -401,9 +401,9 @@ export function Works() {
                     {/* Tech Stack Pills */}
                     <div className="space-y-4 pt-2">
                       <div className="flex flex-wrap gap-1.5">
-                        {project.techStack.slice(0, 4).map((tech) => (
+                        {project.techStack.slice(0, 4).map((tech, tIdx) => (
                           <span
-                            key={tech}
+                            key={`${tech}-${tIdx}`}
                             className="text-[10px] font-mono px-2 py-0.5 rounded border border-white/10 bg-white/[0.02] text-neutral-300"
                           >
                             {tech}
@@ -560,7 +560,7 @@ export function Works() {
 
                 return (
                   <motion.div
-                    key={project.id}
+                    key={`${project.id}-${index}`}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: Math.min(index * 0.04, 0.4) }}
@@ -609,9 +609,9 @@ export function Works() {
                       {/* Tech Stack */}
                       <div className="md:col-span-3">
                         <div className="flex flex-wrap gap-1.5">
-                          {project.techStack.map((tech) => (
+                          {project.techStack.map((tech, tIdx) => (
                             <span
-                              key={tech}
+                              key={`${tech}-${tIdx}`}
                               className="text-[11px] font-mono px-2 py-0.5 rounded border border-white/10 bg-white/[0.02] text-neutral-300 group-hover:border-white/20 transition-colors"
                             >
                               {tech}

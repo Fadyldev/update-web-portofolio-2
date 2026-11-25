@@ -5,6 +5,7 @@ import { Footer } from './components/Footer';
 import { CursorGlow } from './components/CursorGlow';
 import { CinematicOpening } from './components/CinematicOpening';
 import { ToastContainer } from './components/ToastContainer';
+import { ResumeModal } from './components/ResumeModal';
 import { Home } from './pages/Home';
 import { Works } from './pages/Works';
 import { About } from './pages/About';
@@ -14,7 +15,14 @@ import { ProjectDetail } from './pages/ProjectDetail';
 import { NotFound } from './pages/NotFound';
 
 function PortfolioApp() {
-  const { currentPath, data, hasSeenOpening, setHasSeenOpening } = usePortfolio();
+  const { 
+    currentPath, 
+    data, 
+    hasSeenOpening, 
+    setHasSeenOpening,
+    isResumeOpen,
+    closeResumeModal
+  } = usePortfolio();
 
   // Show opening screen on initial home visit if enabled in settings
   const shouldShowOpening =
@@ -76,6 +84,13 @@ function PortfolioApp() {
 
       {/* Footer on public pages */}
       {!isAdminPage && <Footer />}
+
+      {/* Global Curriculum Vitae / Resume Modal */}
+      <ResumeModal
+        isOpen={isResumeOpen}
+        onClose={closeResumeModal}
+        data={data}
+      />
     </div>
   );
 }

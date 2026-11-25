@@ -326,9 +326,9 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
                   <span>Teknologi yang Digunakan</span>
                 </h4>
                 <div className="flex flex-wrap gap-2">
-                  {project.techStack.map((tech) => (
+                  {project.techStack.map((tech, tIdx) => (
                     <span
-                      key={tech}
+                      key={`${tech}-${tIdx}`}
                       className="text-xs font-mono px-3 py-1.5 rounded-lg border border-white/10 bg-white/[0.02] text-neutral-200"
                     >
                       {tech}

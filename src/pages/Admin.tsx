@@ -62,6 +62,7 @@ export function Admin() {
     updateSettings, 
     deleteMessage, 
     resetData, 
+    applyFullStackTemplate,
     exportData, 
     importData, 
     navigate,
@@ -147,7 +148,7 @@ export function Admin() {
   const [editingSkillId, setEditingSkillId] = useState<string | null>(null);
   const [skillForm, setSkillForm] = useState<{
     name: string;
-    category: 'Core Web' | 'Design & Visual' | 'Tools & Workflow';
+    category: Skill['category'];
     description: string;
     level: string;
   }>({
@@ -420,6 +421,25 @@ export function Admin() {
 
               <button
                 type="button"
+                onClick={async () => {
+                  if (
+                    window.confirm(
+                      'Terapkan teks Profil (Profesi, Headline, Bio), About, Development Process, dan daftar Skills Full-Stack (HTML, CSS/Tailwind, JS, PHP, SQL, Supabase) ke database? Daftar proyek, foto profil, link CV, dan kontakmu TIDAK akan terhapus.'
+                    )
+                  ) {
+                    await applyFullStackTemplate();
+                  }
+                }}
+                disabled={isSaving}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-amber-500/40 bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 text-xs font-mono transition-all cursor-pointer shadow-sm disabled:opacity-50"
+                title="Perbarui teks Profil, About & Skills ke versi Full-Stack tanpa menghapus Proyek, Foto, atau Kontak"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>Terapkan Teks Full-Stack (Aman)</span>
+              </button>
+
+              <button
+                type="button"
                 onClick={() => refreshFromCloud()}
                 disabled={isSaving}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/[0.05] hover:bg-white/10 text-neutral-300 hover:text-white text-xs font-mono transition-all cursor-pointer"
@@ -677,7 +697,7 @@ export function Admin() {
                 </div>
               </div>
 
-              <div className="md:col-span-2 space-y-1.5 pt-2 border-t border-white/[0.06]">
+              <div className="md:col-span-2 space-y-2 pt-2 border-t border-white/[0.06]">
                 <label className="text-xs font-mono text-neutral-300 flex items-center justify-between">
                   <span className="flex items-center gap-1.5">
                     <FileText className="w-3.5 h-3.5 text-amber-400" />
@@ -685,15 +705,35 @@ export function Admin() {
                   </span>
                   <span className="text-[10px] text-neutral-500 font-mono">Google Drive / Canva / Cloud Link</span>
                 </label>
-                <input
-                  type="url"
-                  value={profileForm.resumeUrl || ''}
-                  onChange={(e) => setProfileForm({ ...profileForm, resumeUrl: e.target.value })}
-                  placeholder="https://drive.google.com/file/d/... atau https://my-resume.pdf"
-                  className="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-black/40 text-sm text-white focus:outline-none focus:border-white/30 font-mono"
-                />
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={profileForm.resumeUrl || ''}
+                    onChange={(e) => setProfileForm({ ...profileForm, resumeUrl: e.target.value })}
+                    onBlur={(e) => {
+                      const val = e.target.value.trim();
+                      if (val && !/^https?:\/\//i.test(val)) {
+                        setProfileForm({ ...profileForm, resumeUrl: `https://${val}` });
+                      }
+                    }}
+                    placeholder="https://drive.google.com/file/d/... atau https://my-resume.pdf"
+                    className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 bg-black/40 text-sm text-white focus:outline-none focus:border-white/30 font-mono"
+                  />
+                  {profileForm.resumeUrl && (
+                    <a
+                      href={profileForm.resumeUrl.startsWith('http') ? profileForm.resumeUrl : `https://${profileForm.resumeUrl}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-3.5 py-2.5 rounded-xl border border-white/15 bg-white/[0.05] hover:bg-white/[0.1] text-xs font-mono text-neutral-200 hover:text-white transition-all flex items-center gap-1.5 shrink-0"
+                      title="Uji buka link di tab baru"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Uji Link</span>
+                    </a>
+                  )}
+                </div>
                 <p className="text-[11px] text-neutral-400 font-mono">
-                  * Catatan: Jika dikosongkan, sistem secara otomatis merangkum data profil & portofolio Anda menjadi dokumen cetak PDF ATS-friendly. Jika Anda mengisi link di atas, pengunjung juga dapat membuka link file CV khusus Anda langsung.
+                  * Catatan: Jika dikosongkan, sistem secara otomatis merangkum data profil & portofolio Anda menjadi dokumen cetak PDF ATS-friendly. Jika Anda mengisi tautan di atas, pengunjung juga dapat membuka atau mengunduh file asli Anda langsung tanpa eror 404.
                 </p>
               </div>
             </div>
@@ -713,7 +753,7 @@ export function Admin() {
                     </h2>
                   </div>
                   <p className="text-xs text-neutral-400 mt-1">
-                    Kelola narasi editorial, biografi diri, judul keahlian, target perkembangan & eksplorasi, alur kerja (Creative Process Timeline), dan perangkat kerja (Tools & Software) yang tampil di halaman /about.
+                    Kelola narasi profil, biografi diri, judul keahlian, target perkembangan & eksplorasi, alur kerja (Development Process), dan perangkat kerja (Tools & Software) yang tampil di halaman /about.
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
@@ -1211,9 +1251,9 @@ export function Admin() {
                       Daftar Keahlian Aktif ({data.skills.length} item)
                     </span>
                     <div className="flex flex-wrap gap-2 pt-1">
-                      {data.skills.map((s) => (
+                      {data.skills.map((s, idx) => (
                         <span
-                          key={s.id}
+                          key={`${s.id}-${idx}`}
                           className="text-[11px] font-mono px-2.5 py-0.5 rounded-md border border-white/10 bg-white/[0.04] text-neutral-300"
                         >
                           {s.name} <span className="text-neutral-500">({s.category})</span>
@@ -1330,12 +1370,12 @@ export function Admin() {
                 </div>
               </div>
 
-              {/* Sub-section 6: Creative Process Timeline (Metodologi Kerja) */}
+              {/* Sub-section 6: Development Process (Metodologi Kerja) */}
               <div className="space-y-4 pt-4 border-t border-white/[0.06]">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xs font-mono text-neutral-400 uppercase tracking-wider flex items-center gap-2">
                     <GitBranch className="w-3.5 h-3.5 text-sky-400" />
-                    <span>6. Creative Process Timeline (Alur & Metodologi Kerja)</span>
+                    <span>6. Development Process (Alur & Metodologi Kerja)</span>
                   </h3>
                   <button
                     type="button"
@@ -2166,7 +2206,7 @@ export function Admin() {
               <div className="divide-y divide-white/10">
                 {data.projects.map((proj, idx) => (
                   <div
-                    key={proj.id}
+                    key={`${proj.id}-${idx}`}
                     className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                   >
                     <div className="flex items-start gap-3">
@@ -2297,7 +2337,11 @@ export function Admin() {
                             category: proj.category,
                             year: proj.year,
                             description: proj.description,
-                            techStackString: proj.techStack.join(', '),
+                            techStackString: Array.isArray(proj.techStack)
+                              ? proj.techStack.join(', ')
+                              : typeof proj.techStack === 'string'
+                              ? proj.techStack
+                              : '',
                             liveDemoUrl: proj.liveDemoUrl || '',
                             sourceCodeUrl: proj.sourceCodeUrl || '',
                             featured: proj.featured,
@@ -2409,6 +2453,7 @@ export function Admin() {
                       className="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-[#0c0d12] text-sm text-white focus:outline-none focus:border-white/30"
                     >
                       <option value="Core Web">Core Web</option>
+                      <option value="Backend & Database">Backend & Database</option>
                       <option value="Design & Visual">Design & Visual</option>
                       <option value="Tools & Workflow">Tools & Workflow</option>
                     </select>
@@ -2450,9 +2495,9 @@ export function Admin() {
 
             {/* Existing skills grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {data.skills.map((skill) => (
+              {data.skills.map((skill, idx) => (
                 <div
-                  key={skill.id}
+                  key={`${skill.id}-${idx}`}
                   className="p-5 rounded-2xl border border-white/10 bg-[#0c0d12]/80 flex flex-col justify-between gap-3"
                 >
                   <div className="space-y-2">
@@ -2980,9 +3025,9 @@ export function Admin() {
               </div>
             ) : (
               <div className="space-y-4">
-                {data.messages.map((msg) => (
+                {data.messages.map((msg, idx) => (
                   <div
-                    key={msg.id}
+                    key={`${msg.id}-${idx}`}
                     className="p-5 rounded-2xl border border-white/10 bg-white/[0.02] space-y-3"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/5 pb-2">

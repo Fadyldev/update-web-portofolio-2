@@ -85,39 +85,65 @@
 @media print {
   @page {
     size: A4 portrait;
-    margin: 12mm 14mm 14mm 14mm;
+    margin: 0;
   }
 
   html, body {
     background-color: #ffffff !important;
+    background: #ffffff !important;
     color: #111827 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     font-size: 11pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
-  /* Hide screen chrome, modals background, overlays, nav, cursor */
-  nav, 
-  footer, 
-  #cinematic-opening-screen, 
-  #cursor-glow, 
-  .print-hide, 
-  .backdrop-blur-md,
-  button,
-  .toast-container {
+  /* Hide screen chrome, navigation, public pages, footers, cursor, toasts */
+  #main-navigation-header,
+  header,
+  nav,
+  footer,
+  main,
+  #cursor-glow,
+  #cinematic-opening-screen,
+  .toast-container,
+  .print-hide,
+  .resume-modal-topbar {
     display: none !important;
   }
 
-  /* Reset modal wrapper so document prints naturally as document */
+  /* Reset modal backdrop so document prints naturally on paper */
   .resume-modal-backdrop {
-    background: transparent !important;
+    display: block !important;
     position: static !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     padding: 0 !important;
     margin: 0 !important;
     overflow: visible !important;
+    width: 100% !important;
+  }
+
+  .resume-modal-window {
+    display: block !important;
+    position: static !important;
+    max-width: none !important;
+    max-height: none !important;
+    width: 100% !important;
+    border: none !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
   .resume-a4-sheet {
+    display: block !important;
+    position: static !important;
     box-shadow: none !important;
     border: none !important;
     max-width: 100% !important;

@@ -35,6 +35,10 @@ const TECH_PALETTE: { [key: string]: { bg: string; text: string; glow: string } 
   motion: { bg: '#ec4899', text: 'text-pink-400', glow: 'rgba(236, 72, 153, 0.4)' },
   'web development': { bg: '#34d399', text: 'text-emerald-400', glow: 'rgba(52, 211, 153, 0.4)' },
   typescript: { bg: '#3b82f6', text: 'text-blue-500', glow: 'rgba(59, 130, 246, 0.4)' },
+  php: { bg: '#818cf8', text: 'text-indigo-400', glow: 'rgba(129, 140, 248, 0.4)' },
+  sql: { bg: '#22d3ee', text: 'text-cyan-400', glow: 'rgba(34, 211, 238, 0.4)' },
+  sqlite: { bg: '#38bdf8', text: 'text-sky-400', glow: 'rgba(56, 189, 248, 0.4)' },
+  supabase: { bg: '#34d399', text: 'text-emerald-400', glow: 'rgba(52, 211, 153, 0.4)' },
   figma: { bg: '#a855f7', text: 'text-purple-500', glow: 'rgba(168, 85, 247, 0.4)' },
   git: { bg: '#f43f5e', text: 'text-rose-500', glow: 'rgba(244, 63, 94, 0.4)' },
 };
@@ -114,6 +118,7 @@ export function QuickStats({ data, onExploreProjects }: QuickStatsProps) {
 
   const totalSkills = data.skills.length;
   const coreWebSkills = data.skills.filter((s) => s.category === 'Core Web');
+  const backendSkills = data.skills.filter((s) => s.category === 'Backend & Database');
   const designSkills = data.skills.filter((s) => s.category === 'Design & Visual');
   const toolsSkills = data.skills.filter((s) => s.category === 'Tools & Workflow');
 
@@ -127,7 +132,7 @@ export function QuickStats({ data, onExploreProjects }: QuickStatsProps) {
           </div>
           <div>
             <h3 className="text-sm font-display font-bold text-white flex items-center gap-2">
-              <span>Studio Telemetry & Tech Analytics</span>
+              <span>Tech Stack & Project Analytics</span>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded-full border border-white/10 bg-white/[0.04] text-emerald-400">
                 ● LIVE DATABASE
               </span>
@@ -318,37 +323,39 @@ export function QuickStats({ data, onExploreProjects }: QuickStatsProps) {
                 <div className="flex items-center justify-between text-xs font-mono">
                   <span className="font-bold text-white flex items-center gap-1.5">
                     <Code2 className="w-3.5 h-3.5 text-cyan-400" />
-                    <span>Modern Web Frontend (React, HTML/CSS, Tailwind)</span>
+                    <span>Frontend & Web (HTML, CSS/Tailwind, JS)</span>
                   </span>
-                  <span className="text-cyan-400 font-bold">92%</span>
+                  <span className="text-cyan-400 font-mono text-[11px]">{coreWebSkills.length} Skill</span>
                 </div>
                 <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
-                  <div className="h-full rounded-full bg-cyan-400" style={{ width: '92%' }} />
+                  <div className="h-full rounded-full bg-cyan-400" style={{ width: '75%' }} />
                 </div>
                 <div className="flex flex-wrap gap-1.5 text-[11px] font-mono text-neutral-400">
-                  {coreWebSkills.map((s) => (
-                    <span key={s.id} className="px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/5">
+                  {coreWebSkills.map((s, idx) => (
+                    <span key={`${s.id}-${idx}`} className="px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/5">
                       {s.name}
                     </span>
                   ))}
                 </div>
               </div>
 
-              {/* Vector & Inkscape Bar */}
+              {/* Backend & Database Bar */}
               <div className="p-4 rounded-xl border border-white/10 bg-white/[0.02] space-y-3">
                 <div className="flex items-center justify-between text-xs font-mono">
                   <span className="font-bold text-white flex items-center gap-1.5">
                     <Layers className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Visual Asset & Inkscape Vector Art</span>
+                    <span>{backendSkills.length > 0 ? 'Backend & Database (PHP, SQL, Supabase)' : 'Design & Visual'}</span>
                   </span>
-                  <span className="text-amber-400 font-bold">88%</span>
+                  <span className="text-amber-400 font-mono text-[11px]">
+                    {(backendSkills.length > 0 ? backendSkills : designSkills).length} Skill
+                  </span>
                 </div>
                 <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
-                  <div className="h-full rounded-full bg-amber-400" style={{ width: '88%' }} />
+                  <div className="h-full rounded-full bg-amber-400" style={{ width: '60%' }} />
                 </div>
                 <div className="flex flex-wrap gap-1.5 text-[11px] font-mono text-neutral-400">
-                  {designSkills.map((s) => (
-                    <span key={s.id} className="px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/5">
+                  {(backendSkills.length > 0 ? backendSkills : designSkills).map((s, idx) => (
+                    <span key={`${s.id}-${idx}`} className="px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/5">
                       {s.name}
                     </span>
                   ))}
@@ -368,8 +375,8 @@ export function QuickStats({ data, onExploreProjects }: QuickStatsProps) {
                   <div className="h-full rounded-full bg-emerald-400" style={{ width: '85%' }} />
                 </div>
                 <div className="flex flex-wrap gap-1.5 text-[11px] font-mono text-neutral-400">
-                  {toolsSkills.map((s) => (
-                    <span key={s.id} className="px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/5">
+                  {toolsSkills.map((s, idx) => (
+                    <span key={`${s.id}-${idx}`} className="px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/5">
                       {s.name}
                     </span>
                   ))}
@@ -504,7 +511,7 @@ export function QuickStats({ data, onExploreProjects }: QuickStatsProps) {
             </span>
             <span className="hidden sm:inline-block">•</span>
             <span className="hidden sm:inline-block">
-              Arsitektur Komponen Modular React
+              Portofolio Proyek & Eksplorasi Full Stack
             </span>
           </div>
 

@@ -38,7 +38,7 @@ export interface Project {
 export interface Skill {
   id: string;
   name: string;
-  category: 'Core Web' | 'Design & Visual' | 'Tools & Workflow';
+  category: 'Core Web' | 'Backend & Database' | 'Design & Visual' | 'Tools & Workflow';
   description: string;
   level?: string;
 }

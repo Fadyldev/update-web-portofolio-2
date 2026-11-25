@@ -2,13 +2,11 @@ import { useState, useEffect } from 'react';
 import { Menu, X, ArrowUpRight, FileText } from 'lucide-react';
 import { usePortfolio } from '../context/PortfolioContext';
 import { getAccentClasses } from '../utils/theme';
-import { ResumeModal } from './ResumeModal';
 
 export function Navbar() {
-  const { currentPath, navigate, data } = usePortfolio();
+  const { currentPath, navigate, data, openResumeModal } = usePortfolio();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isResumeOpen, setIsResumeOpen] = useState(false);
   const accent = getAccentClasses(data.settings.accentColor);
 
   useEffect(() => {
@@ -52,7 +50,7 @@ export function Navbar() {
             FADIYEL
           </span>
           <span className="text-[10px] font-mono tracking-widest text-neutral-300 px-1.5 py-0.5 rounded border border-white/5 bg-white/[0.02]">
-            STUDIO
+            DEV
           </span>
         </button>
 
@@ -83,7 +81,7 @@ export function Navbar() {
         <div className="hidden md:flex items-center gap-3">
           <button
             id="nav-resume-btn"
-            onClick={() => setIsResumeOpen(true)}
+            onClick={openResumeModal}
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.02] text-xs font-mono text-neutral-300 hover:text-white hover:border-white/30 transition-all cursor-pointer"
             title="Pratinjau Resume / CV"
           >
@@ -140,9 +138,9 @@ export function Navbar() {
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  setIsResumeOpen(true);
+                  openResumeModal();
                 }}
-                className="w-full py-2.5 rounded-full text-center text-xs font-mono tracking-wide border border-white/15 bg-white/[0.04] text-neutral-200 flex items-center justify-center gap-2"
+                className="w-full py-2.5 rounded-full text-center text-xs font-mono tracking-wide border border-white/15 bg-white/[0.04] text-neutral-200 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <FileText className="w-3.5 h-3.5 text-amber-400" />
                 <span>Unduh CV / Resume PDF</span>
@@ -162,13 +160,6 @@ export function Navbar() {
           </div>
         </div>
       )}
-
-      {/* Resume Modal */}
-      <ResumeModal
-        isOpen={isResumeOpen}
-        onClose={() => setIsResumeOpen(false)}
-        data={data}
-      />
     </header>
   );
 }

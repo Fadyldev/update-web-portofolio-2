@@ -12,14 +12,12 @@ import {
 } from 'lucide-react';
 import { usePortfolio } from '../context/PortfolioContext';
 import { getAccentClasses } from '../utils/theme';
-import { ResumeModal } from '../components/ResumeModal';
 import { ProjectCategoryFallback } from '../components/ProjectCategoryFallback';
 import { DEFAULT_ABOUT_CONTENT } from '../data/defaultData';
 
 export function Home() {
-  const { data, navigate } = usePortfolio();
+  const { data, navigate, openResumeModal } = usePortfolio();
   const accent = getAccentClasses(data.settings.accentColor);
-  const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [hoveredProject, setHoveredProject] = useState<string | null>(null);
   const [copiedEmail, setCopiedEmail] = useState(false);
 
@@ -166,7 +164,7 @@ export function Home() {
 
             <button
               id="hero-resume-btn"
-              onClick={() => setIsResumeOpen(true)}
+              onClick={openResumeModal}
               className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full border border-white/10 hover:border-white/30 bg-white/[0.03] hover:bg-white/[0.06] text-sm text-neutral-200 hover:text-white transition-all cursor-pointer"
               title="Pratinjau & Unduh Resume / CV"
             >
@@ -211,7 +209,7 @@ export function Home() {
                     <div className="absolute bottom-3.5 left-3.5 right-3.5 flex items-center justify-between text-[11px] font-mono">
                       <span className="text-white font-medium">{data.profile.name}</span>
                       <span className="text-[10px] px-2 py-0.5 rounded border border-white/20 bg-black/60 text-amber-300">
-                        STUDIO LEAD
+                        FULL STACK DEV
                       </span>
                     </div>
                   </div>
@@ -243,7 +241,7 @@ export function Home() {
                   className="group inline-flex items-center gap-2 text-sm font-medium text-white hover:text-neutral-200 transition-colors cursor-pointer"
                 >
                   <span className="border-b border-white/30 pb-0.5 group-hover:border-white transition-colors">
-                    More About Me & Creative Process
+                    More About Me & Development Process
                   </span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
@@ -311,7 +309,7 @@ export function Home() {
 
               return (
                 <motion.div
-                  key={project.id}
+                  key={`${project.id}-${idx}`}
                   initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-30px' }}
@@ -383,9 +381,9 @@ export function Home() {
 
                       {/* Tech Stack Badges */}
                       <div className="flex flex-wrap gap-1.5 pt-1">
-                        {project.techStack.map((tech) => (
+                        {project.techStack.map((tech, tIdx) => (
                           <span
-                            key={tech}
+                            key={`${tech}-${tIdx}`}
                             className="text-[11px] font-mono px-2.5 py-0.5 rounded-full border border-white/10 bg-white/[0.02] text-neutral-300"
                           >
                             {tech}
@@ -431,7 +429,7 @@ export function Home() {
               onClick={() => navigate('/works')}
               className="inline-flex items-center gap-2 px-8 py-3 rounded-full border border-white/10 hover:border-white/25 bg-white/[0.02] text-xs font-mono tracking-widest text-neutral-300 hover:text-white uppercase transition-all cursor-pointer"
             >
-              <span>Explore All Studio Projects</span>
+              <span>Explore All Projects</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -512,13 +510,6 @@ export function Home() {
           </div>
         </section>
       )}
-
-      {/* Resume / CV Modal Component */}
-      <ResumeModal
-        isOpen={isResumeOpen}
-        onClose={() => setIsResumeOpen(false)}
-        data={data}
-      />
     </div>
   );
 }
